@@ -1,17 +1,19 @@
+from datetime import timedelta
 from typing import Dict
 
-from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
+
+from app.core import security
+from app.crud import crud_user
+from app.schema.user import UserCreate
 
 
-def get_access_token(client: TestClient) -> Dict[str, str]:
-    data = {"tel": "01099998888", "password": "1234"}
-    client.post(
-        "api/v1/users",
-        json=data,
+def get_user_access_token(db: Session) -> Dict[str, str]:
+    data = {"email": "admin@gmail.com", "name": "admin", "authType": "GOOGLE"}
+    user = crud_user.create(db=db, data=UserCreate(**data))
+    access_token = security.create_access_token(
+        subject=user.id,
+        expires_delta=timedelta(hours=1),
     )
-    response = client.post(
-        "api/v1/auth/login", json={"tel": "01099998888", "password": "1234"}
-    )
-    access_token = response.json()["data"]["accessToken"]
     headers = {"Authorization": f"Bearer {access_token}"}
     return headers

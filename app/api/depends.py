@@ -43,13 +43,10 @@ def get_current_user(session: SessionDepends, request: Request) -> User:
     except (jwt.JWTError, ValidationError):
         raise UnauthorizedException("권한이 없습니다.")
 
-    user = session.get(User, token_data.sub)
+    user: User | None = session.get(User, token_data.sub)
 
     if not user:
         raise NotFoundException("존재하지 않는 회원입니다.")
-
-    if user.logout_flag:
-        raise UnauthorizedException("로그아웃되었습니다. 다시 로그인 해주세요.")
 
     return user
 

@@ -1,16 +1,16 @@
 from fastapi import FastAPI, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 from app.api.v1.api import api_v1_router
-from app.core.config import settings
 from app.core.exception import CustomException
 
-app = FastAPI(title=settings.PROJECT_NAME)
+app = FastAPI()
 
 app.include_router(api_v1_router)
 
@@ -75,3 +75,17 @@ async def http_exception_handler(request, exc: StarletteHTTPException):
             {"meta": {"code": exc.status_code, "message": exc.detail}, "data": None}
         ),
     )
+
+
+origins = [
+    "http://localhost",
+    "http://localhost:8081",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

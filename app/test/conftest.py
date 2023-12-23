@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from app.api.depends import get_db
 from app.core.config import settings
 from app.main import app
-from app.test.util import get_access_token
+from app.test.util import get_user_access_token
 
 engine = create_engine(settings.TEST_DATABASE_URL)
 SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -33,5 +33,5 @@ def client(db: SessionTesting) -> Generator:
 
 
 @pytest.fixture(scope="function")
-def access_token(client: TestClient) -> Dict[str, str]:
-    return get_access_token(client)
+def user_access_token(db: SessionTesting) -> Dict[str, str]:
+    return get_user_access_token(db)

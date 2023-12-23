@@ -1,28 +1,24 @@
-from pydantic import Field, validator
+from datetime import datetime
 
-from app.core.exception import BadRequestException
+from pydantic import ConfigDict, Field
+
 from app.schema.base import Schema
+from app.type.auth import AuthType
 
 
-class UserCreate(Schema):
-    tel: str = Field(description="휴대폰 번호 (휴대폰 번호는 숫자로 된 11자리여야 합니다)")
-    password: str = Field(description="비밀번호")
-
-    @validator("tel")
-    def validate_tel(cls, tel: str) -> str:
-        if len(tel) != 11 or not tel.isdigit():
-            raise BadRequestException("휴대폰 번호는 숫자로 된 11자리여야 합니다.")
-        return tel
+class _UserBase(Schema):
+    email: str = Field(description="이메일")
+    name: str = Field(description="이름")
+    auth_type: AuthType = Field(description="인증 타입")
 
 
-class UserResponse(Schema):
-    id: int = Field(description="ID")
-    tel: str = Field(description="휴대폰 번호")
-
-    class Config:
-        orm_mode = True
+class UserCreate(_UserBase):
+    pass
 
 
-class UserLogin(Schema):
-    tel: str = Field(description="휴대폰 번호 (휴대폰 번호는 숫자로 된 11자리여야 합니다)")
-    password: str = Field(description="비밀번호")
+class UserResponse(_UserBase):
+    id: int = Field(description="아이디")
+    created_at: datetime = Field(description="생성일시")
+    updated_at: datetime = Field(description="수정일시")
+
+    model_config = ConfigDict(from_attributes=True)
