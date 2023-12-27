@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     MYSQL_DB_NAME: str
     TEST_DATABASE_URL: str
     GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GOOGLE_CALLBACK_URL: str
+    NAVER_CLIENT_ID: str
+    NAVER_CLIENT_SECRET: str
 
 
 settings = Settings(
