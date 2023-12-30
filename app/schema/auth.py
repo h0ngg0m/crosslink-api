@@ -10,3 +10,8 @@ class GoogleLogin(Schema):
 class NaverLogin(Schema):
     code: str = Field(..., description="네이버 로그인 code")
     state: str = Field(..., description="네이버 로그인 state")
+
+
+class AdminLogin(Schema):
+    login_id: str = Field(..., description="관리자 아이디")
+    password: str = Field(..., description="관리자 비밀번호")
