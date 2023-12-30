@@ -5,7 +5,7 @@ from app.core.security import create_access_token
 
 def test_create_access_token_success():
     # given
-    subject = "test"
+    subject = {"test": "test"}
     expires_delta = timedelta(minutes=5)
 
     # when

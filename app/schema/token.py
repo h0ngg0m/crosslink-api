@@ -1,6 +1,8 @@
 from pydantic import Field
 
+from app.model.admin import Admin
 from app.schema.base import Schema
+from app.type.admin import AdminRole
 
 
 class Token(Schema):
@@ -10,3 +12,13 @@ class Token(Schema):
 
 class TokenPayload(Schema):
     sub: int | None = Field(None, description="토큰 내용")
+
+
+class AdminClaim(Schema):
+    id: int
+    login_id: str
+    role: AdminRole
+
+    @classmethod
+    def from_admin(cls, admin: Admin):
+        return cls(id=admin.id, login_id=admin.login_id, role=admin.role)
