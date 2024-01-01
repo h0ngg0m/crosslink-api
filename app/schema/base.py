@@ -2,10 +2,7 @@ from typing import Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
-
-def camelize(s: str) -> str:
-    words = s.split("_")
-    return words[0] + "".join(word.capitalize() for word in words[1:])
+from app.core.util import camelize
 
 
 class Schema(BaseModel):
@@ -18,8 +15,9 @@ T = TypeVar("T")
 
 
 class ListResponse(Schema, Generic[T]):
-    next_cursor: int | None = Field(None, description="다음 페이지 커서")
-    page_size: int | None = Field(None, description="페이지당 아이템 개수, -1인 경우 모든 아이템 조회")
+    page: int = Field(description="현재 페이지")
+    items_per_page: int = Field(description="페이지 당 아이템 개수")
+    items_length: int = Field(description="아이템 총 개수")
     items: list[T] = Field(description="아이템 목록")
 
 
