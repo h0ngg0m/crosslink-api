@@ -4,15 +4,22 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
+from fastapi.routing import APIRoute
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 from app.api.v1.api import api_v1_router
 from app.core.exception import CustomException
+from app.schema.base import camelize
 
 app = FastAPI()
 
 app.include_router(api_v1_router)
+
+for route in app.routes:
+    if isinstance(route, APIRoute):
+        for param in route.dependant.query_params:
+            param.field_info.alias = camelize(param.name)
 
 
 # openapi docs (swagger) 에서 기본으로 포함되는 422 에러를 제거하기 위한 코드
@@ -53,6 +60,7 @@ async def custom_exception_handler(request: Request, exc: CustomException):
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    print(f"Full error details: {exc.errors()}")
     return JSONResponse(
         status_code=HTTP_422_UNPROCESSABLE_ENTITY,
         content=jsonable_encoder(
@@ -80,6 +88,7 @@ async def http_exception_handler(request, exc: StarletteHTTPException):
 origins = [
     "http://localhost",
     "http://localhost:8081",
+    "http://localhost:8082",
 ]
 
 app.add_middleware(
