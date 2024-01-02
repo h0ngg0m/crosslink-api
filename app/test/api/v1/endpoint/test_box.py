@@ -33,14 +33,14 @@ def test_get_boxes_success(client: TestClient, db: Session):
     crud_box.create(db=db, data=BoxCreate(**data3))
 
     # when
-    response = client.get("api/v1/boxes")
+    response = client.get("api/v1/boxes?page=1&itemsPerPage=100&sortBy=&sortOrder=")
 
     # then
     assert response.status_code == 200
     assert response.json()["meta"]["code"] == 200
     assert response.json()["meta"]["message"] == "ok"
 
-    response_data = response.json()["data"]
+    response_data = response.json()["data"]["items"]
     assert len(response_data) == 3
 
     assert response_data[0]["id"] is not None
