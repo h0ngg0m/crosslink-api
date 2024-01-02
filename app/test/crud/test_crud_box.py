@@ -55,7 +55,10 @@ def test_get_boxes_success(db: Session):
     crud_box.create(db=db, data=BoxCreate(**data3))
 
     # when
-    boxes = crud_box.get_boxes(db=db)
+    response = crud_box.get_boxes(
+        db=db, page=1, items_per_page=100, sort_by=None, sort_order=None
+    )
+    boxes = response.items
 
     # then
     assert len(boxes) == 3
