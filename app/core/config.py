@@ -1,7 +1,8 @@
+from functools import lru_cache
 from os import getenv
 from pathlib import Path
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -28,7 +29,11 @@ class Settings(BaseSettings):
     NAVER_CLIENT_ID: str
     NAVER_CLIENT_SECRET: str
 
+    model_config = SettingsConfigDict(
+        env_file=get_dotenv_paths(), env_file_encoding="utf-8", case_sensitive=True
+    )
 
-settings = Settings(
-    _env_file=get_dotenv_paths(), _env_file_encoding="utf-8", _case_sensitive=True
-)
+
+@lru_cache
+def get_settings():
+    return Settings()

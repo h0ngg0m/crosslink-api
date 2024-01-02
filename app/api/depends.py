@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from starlette.requests import Request
 
 from app.core import security
-from app.core.config import settings
+from app.core.config import get_settings
 from app.core.db.session import SessionLocal
 from app.core.exception import (
     ForbiddenException,
@@ -19,6 +19,8 @@ from app.core.security import get_claims, is_valid_jwt
 from app.model.user import User
 from app.schema.token import TokenPayload
 from app.type.admin import AdminRole
+
+settings = get_settings()
 
 
 def get_db() -> Generator:

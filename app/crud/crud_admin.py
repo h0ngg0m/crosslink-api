@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core import security
-from app.core.config import settings
+from app.core.config import get_settings
 from app.core.exception import (
     BadRequestException,
     ConflictException,
@@ -16,6 +16,8 @@ from app.model.admin import Admin
 from app.schema.admin import AdminAuthenticate, AdminCreate, AdminResponse
 from app.schema.auth import AdminLogin
 from app.schema.token import AdminClaim, Token
+
+settings = get_settings()
 
 
 def read_by_id(*, db: Session, id_: int) -> AdminResponse | None:
