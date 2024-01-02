@@ -6,13 +6,15 @@ from google.oauth2 import id_token
 from sqlalchemy.orm import Session
 
 from app.core import security
-from app.core.config import settings
+from app.core.config import get_settings
 from app.core.exception import ConflictException
 from app.model.user import User
 from app.schema.auth import GoogleLogin, NaverLogin
 from app.schema.token import Token
 from app.schema.user import UserCreate, UserResponse
 from app.type.auth import AuthType
+
+settings = get_settings()
 
 
 async def google_login(*, db: Session, data: GoogleLogin) -> Token:

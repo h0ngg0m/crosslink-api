@@ -6,10 +6,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.api.depends import get_db
-from app.core.config import settings
+from app.core.config import get_settings
 from app.main import app
 from app.test.util import get_admin_access_token, get_user_access_token
 
+settings = get_settings()
 engine = create_engine(settings.TEST_DATABASE_URL)
 SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

@@ -3,9 +3,11 @@ from datetime import datetime, timedelta, timezone
 import bcrypt
 from jose import JWTError, jwt
 
-from app.core.config import settings
+from app.core.config import get_settings
 
 ALGORITHM = "HS256"
+
+settings = get_settings()
 
 
 def create_access_token(*, subject: dict, expires_delta: timedelta) -> str:

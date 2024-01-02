@@ -1,7 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.core.config import settings
+from app.core.config import get_settings
+
+settings = get_settings()
 
 engine = create_engine(
     f"mysql+pymysql://{settings.MYSQL_USERNAME}:{settings.MYSQL_PASSWORD}@{settings.MYSQL_HOST}:{settings.MYSQL_PORT}/{settings.MYSQL_DB_NAME}",
